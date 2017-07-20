@@ -1,2 +1,2 @@
 # RuntimeStoreDemo
-Runtime store demo sample
+Sample applications to demo the runtime store.
