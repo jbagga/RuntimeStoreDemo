@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Net.Http;
 
 namespace RuntimeStoreDemo20
 {
@@ -14,7 +16,19 @@ namespace RuntimeStoreDemo20
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var stopWatch = Stopwatch.StartNew();
+            var host = BuildWebHost(args);
+            using (host)
+            {
+                host.Start();
+                using (var client = new HttpClient())
+                {
+                    client.GetAsync("http://localhost:5000").GetAwaiter().GetResult();
+                }
+            }
+
+            stopWatch.Stop();
+            Console.WriteLine($"Took {stopWatch.ElapsedMilliseconds}ms");
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
